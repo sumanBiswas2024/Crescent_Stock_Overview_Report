@@ -1,0 +1,156 @@
+{
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "com.crescent.app.stockoverviewreport",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:basic",
+      "version": "1.17.6",
+      "toolsId": "9b267def-27b7-4548-bac9-64ece88dffd6"
+    },
+    "dataSources": {
+      "ZSB_STOCK_OVERVIEW_REP_VAN": {
+        "uri": "/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZSB_STOCK_OVERVIEW_REP_VAN',Version='0001')/$value/",
+        "type": "ODataAnnotation",
+        "settings": {
+          "localUri": "localService/mainService/ZSB_STOCK_OVERVIEW_REP_VAN.xml"
+        }
+      },
+      "mainService": {
+        "uri": "/sap/opu/odata/sap/ZSB_STOCK_OVERVIEW_REP/",
+        "type": "OData",
+        "settings": {
+          "annotations": [
+            "ZSB_STOCK_OVERVIEW_REP_VAN"
+          ],
+          "localUri": "localService/mainService/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "zstockmove-display": {
+          "semanticObject": "zstockmove",
+          "action": "display",
+          "title": "{{zstockmove-display.flpTitle}}",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": false,
+    "dependencies": {
+      "minUI5Version": "1.130.10",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.crescent.app.stockoverviewreport.i18n.i18n"
+        }
+      },
+      "ZSB_STOCK_OVERVIEW_REP": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "useBatch": false
+        }
+      },
+      "globalModel": {
+        "type": "sap.ui.model.json.JSONModel"
+      },
+      "TableDataModel": {
+        "type": "sap.ui.model.json.JSONModel"
+      },
+      "plantModel": {
+        "type": "sap.ui.model.json.JSONModel"
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "transition": "slide",
+        "type": "View",
+        "viewType": "XML",
+        "path": "com.crescent.app.stockoverviewreport.view",
+        "async": true,
+        "viewPath": "com.crescent.app.stockoverviewreport.view"
+      },
+      "routes": [
+        {
+          "name": "RouteReport",
+          "pattern": ":?query:",
+          "target": [
+            "TargetReport"
+          ]
+        },
+        {
+          "pattern": "detail/{MaterialGroup}/{Plant}",
+          "name": "detail",
+          "target": "TargetDetail"
+        }
+      ],
+      "targets": {
+        "TargetReport": {
+          "id": "Report",
+          "name": "Report"
+        },
+        "TargetDetail": {
+          "id": "Detail",
+          "name": "StockDetails"
+        }
+      }
+    },
+    "rootView": {
+      "viewName": "com.crescent.app.stockoverviewreport.view.App",
+      "type": "XML",
+      "id": "App",
+      "async": true
+    }
+  }
+}

@@ -1,0 +1,81 @@
+<mvc:View
+    controllerName="com.crescent.app.stockoverviewreport.controller.StockDetails"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:form="sap.ui.layout.form"
+>
+    <Page
+        title="Stock Details"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+    >
+        <content>
+            <form:SimpleForm
+                id="detailForm"
+                editable="false"
+                layout="ColumnLayout"
+                columnsM="3"
+                columnsL="4"
+                columnsXL="6"
+            >
+                <!-- Display each field in a label/value pair -->
+                <Label text="Material Group" />
+                <Text text="{DetailModel>MaterialGroupCombined}" />
+
+                <Label text="Plant" />
+                <Text text="{DetailModel>Plant}" />
+
+                <Label text="UOM" />
+                <Text text="{DetailModel>unit_of_measure}" />
+
+                <Label text="Opening Stock Qty" />
+                <Text text="{DetailModel>open_stk_qty}" />
+
+                <Label text="Received Against PO Qty" />
+                <Text text="{DetailModel>rcvd_po_qty}" />
+
+                <Label text="Received From Prodn Ord Qty-Unrestricted" />
+                <Text text="{DetailModel>rcvd_mo_qty_unsl}" />
+
+                <Label text="Received From Prodn Ord Qty-Rejection" />
+                <Text text="{DetailModel>rcvd_mo_qty_resl}" />
+
+                <Label text="Foundry Return Qty" />
+                <Text text="{DetailModel>foundary_ret_qty}" />
+
+                <Label text="Other Receipt Qty" />
+                <Text text="{DetailModel>oth_rcv_qty}" />
+
+                <Label text="Transfer In Qty" />
+                <Text text="{DetailModel>trnsf_in_qty}" />
+
+                <Label text="Sales Return Qty" />
+                <Text text="{DetailModel>SLS_RET_QTY}" />
+
+                <Label text="Delivery Against SO Qty" />
+                <Text text="{DetailModel>SLS_DELV_QTY}" />
+
+                <Label text="Issue to Prodn Order Qty" />
+                <Text text="{DetailModel>iss_prd_qty}" />
+
+                <Label text="Other Issue Qty" />
+                <Text text="{DetailModel>oth_iss_QTY}" />
+
+                <Label text="Return Against PO Qty" />
+                <Text text="{DetailModel>RET_PO_QTY}" />
+
+                <Label text="Transfer Out Qty" />
+                <Text text="{DetailModel>trans_out_qty}" />
+
+                <Label text="Total Received Qty" />
+                <Text text="{DetailModel>totalrcvdqty}" />
+
+                <Label text="Total Issue Qty" />
+                <Text text="{DetailModel>totalissueqty}" />
+
+                <Label text="Closing Stock" />
+                <Text text="{DetailModel>closing_stk}" />
+            </form:SimpleForm>
+        </content>
+    </Page>
+</mvc:View>

@@ -1,0 +1,7 @@
+/* Enter your custom styles here */
+.columnHeaderBold {
+    font-weight: bold;
+}
+.boldHeader .sapMColumnHeader .sapMText {
+    font-weight: bold !important;
+}

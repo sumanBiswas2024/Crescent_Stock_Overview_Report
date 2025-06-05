@@ -1,0 +1,53 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="idPlantDialog"
+        title="Select Plant"
+        draggable="true"
+        resizable="true"
+        afterClose=".onClosePlantDialog"
+    >
+        <content>
+            <Toolbar>
+                <SearchField
+                    id="idPlantSearchField"
+                    placeholder="Search..."
+                    liveChange=".onSearchPlant"
+                />
+                <ToolbarSpacer />
+                <CheckBox
+                    id="selectAllCheckBoxPlant"
+                    text="Select All"
+                    select=".onSelectAllChangePlant"
+                />
+            </Toolbar>
+            <List
+                id="idPlantList"
+                mode="MultiSelect"
+                items="{plantModel>/}"
+                selectionChange="onPlantSelectionChange"
+                growing="true"
+                growingThreshold="2000"
+            >
+                <StandardListItem
+                    title="{plantModel>Plant}"
+                    description="{plantModel>PlantName}"
+                    iconDensityAware="false"
+                    iconInset="false"
+                />
+            </List>
+        </content>
+        <buttons>
+            <Button
+                text="OK"
+                press="onSelectPlant"
+            />
+            <Button
+                text="Cancel"
+                press=".onClosePlantDialog"
+            />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>
