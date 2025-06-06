@@ -5,3 +5,23 @@
 .boldHeader .sapMColumnHeader .sapMText {
     font-weight: bold !important;
 }
+.sapMColumnHeader .sapMText {
+    font-size: .875rem;
+    color: #32363a;
+    font-weight: bold;
+}
+.sapUiTableHeaderDataCell .sapMText, .sapMColumnHeader .sapMText {
+    font-weight: bold;
+    font-size: .875rem;
+    color: #32363a;
+}
+.customTableHeight {
+    height: 500px; /* Or any height you need */
+    overflow-y: auto;
+}
+.tableWrapper {
+    height: 500px; /* vertical scroll area */
+    overflow-y: auto;
+    overflow-x: auto;
+  }
+  

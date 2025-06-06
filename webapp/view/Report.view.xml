@@ -148,16 +148,18 @@
                     width="100%"
                     height="auto"
                     horizontal="true"
-                    vertical="true"
+                    vertical="false"
                 >
                     <Table
-                        class="customTable"
+                        class="tableWrapper"
                         id="table"
                         items="{
 						path: 'TableDataModel>/'
 					}"
                         fixedLayout="true"
                         sticky="ColumnHeaders"
+                        growing="true"
+                        growingScrollToLoad="true"
                     >
                         <columns>
                             <Column
@@ -167,7 +169,7 @@
                                 hAlign="Begin"
                                 visible="true"
                             >
-                                <Text text="Material Group" class="columnHeaderBold"/>
+                                <Text text="Material Group" />
                             </Column>
                             <Column
                                 width="8rem"
@@ -175,7 +177,7 @@
                                 hAlign="Begin"
                                 visible="true"
                             >
-                                <Text text="Plant" class="columnHeaderBold"/>
+                                <Text text="Plant" />
                             </Column>
                             <Column
                                 width="8rem"
@@ -184,10 +186,10 @@
                                 hAlign="Begin"
                                 visible="true"
                             >
-                                <Text text="UOM" class="columnHeaderBold"/>
+                                <Text text="UOM" />
                             </Column>
                             <Column width="10rem">
-                                <Text text="Opening Stock Qty" class="columnHeaderBold"/>
+                                <Text text="Opening Stock Qty" />
                             </Column>
                             <Column
                                 width="10rem"
@@ -196,7 +198,7 @@
                                 hAlign="Begin"
                                 visible="true"
                             >
-                                <Text text="Received Against PO Qty" class="columnHeaderBold"/>
+                                <Text text="Received Against PO Qty" />
                             </Column>
                             <Column
                                 width="10rem"
@@ -206,7 +208,7 @@
                                 visible="true"
                             >
                                 <Text
-                                    text="Received From Prodn Ord Qty-Unrestricted" class="columnHeaderBold"
+                                    text="Received From Prodn Ord Qty-Unrestricted" 
                                 />
                             </Column>
                             <Column
@@ -217,7 +219,7 @@
                                 visible="true"
                             >
                                 <Text
-                                    text="Received From Prodn Ord Qty-Rejection" class="columnHeaderBold"
+                                    text="Received From Prodn Ord Qty-Rejection" 
                                 />
                             </Column>
                             <Column
@@ -227,7 +229,7 @@
                                 hAlign="Begin"
                                 visible="true"
                             >
-                                <Text text="Foundary Return Qty" class="columnHeaderBold"/>
+                                <Text text="Foundary Return Qty" />
                             </Column>
                             <Column
                                 width="10rem"
@@ -236,7 +238,7 @@
                                 hAlign="Begin"
                                 visible="true"
                             >
-                                <Text text="Other Receipt Qty" class="columnHeaderBold"/>
+                                <Text text="Other Receipt Qty" />
                             </Column>
                             <Column
                                 width="10rem"
@@ -245,7 +247,7 @@
                                 hAlign="Begin"
                                 visible="true"
                             >
-                                <Text text="Transfer In Qty" class="columnHeaderBold"/>
+                                <Text text="Transfer In Qty" />
                             </Column>
                             <Column
                                 width="10rem"
@@ -254,7 +256,7 @@
                                 hAlign="Begin"
                                 visible="true"
                             >
-                                <Text text="Sales Return Qty" class="columnHeaderBold"/>
+                                <Text text="Sales Return Qty" />
                             </Column>
                             <Column
                                 width="10rem"
@@ -263,7 +265,7 @@
                                 hAlign="Begin"
                                 visible="true"
                             >
-                                <Text text="Delivery Against SO Qty" class="columnHeaderBold"/>
+                                <Text text="Delivery Against SO Qty" />
                             </Column>
                             <Column
                                 width="10rem"
@@ -272,7 +274,7 @@
                                 hAlign="Begin"
                                 visible="true"
                             >
-                                <Text text="Issue to Prodn Order Qty" class="columnHeaderBold"/>
+                                <Text text="Issue to Prodn Order Qty" />
                             </Column>
                             <Column
                                 width="10rem"
@@ -281,7 +283,7 @@
                                 hAlign="Begin"
                                 visible="true"
                             >
-                                <Text text="Other Issue Qty" class="columnHeaderBold"/>
+                                <Text text="Other Issue Qty" />
                             </Column>
                             <Column
                                 width="10rem"
@@ -290,7 +292,7 @@
                                 hAlign="Begin"
                                 visible="true"
                             >
-                                <Text text="Return Against PO Qty" class="columnHeaderBold"/>
+                                <Text text="Return Against PO Qty" />
                             </Column>
                             <Column
                                 width="10rem"
@@ -299,7 +301,7 @@
                                 hAlign="Begin"
                                 visible="true"
                             >
-                                <Text text="Transfer Out Qty" class="columnHeaderBold"/>
+                                <Text text="Transfer Out Qty" />
                             </Column>
                             <Column
                                 width="10rem"
@@ -317,7 +319,7 @@
                                 hAlign="Begin"
                                 visible="true"
                             >
-                                <Text text="Total Issue Qty" class="columnHeaderBold"/>
+                                <Text text="Total Issue Qty" />
                             </Column>
                             <Column
                                 width="10rem"
@@ -326,7 +328,7 @@
                                 hAlign="Begin"
                                 visible="true"
                             >
-                                <Text text="Closing Stock" class="columnHeaderBold"/>
+                                <Text text="Closing Stock" />
                             </Column>
                         </columns>
 

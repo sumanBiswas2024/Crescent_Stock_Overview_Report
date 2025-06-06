@@ -279,16 +279,6 @@ sap.ui.define([
                 }
             });
         },
-        formatMaterialGroup: function (sText, sGroup) {
-            if (sText && sGroup) {
-                return `${sText} (${sGroup})`;
-            } else if (sText) {
-                return sText;
-            } else if (sGroup) {
-                return sGroup;
-            }
-            return "";
-        },
         onPressRow: function (oEvent) {
             // Extract the binding context of the pressed row
             var oSelectedItem = oEvent.getSource();
