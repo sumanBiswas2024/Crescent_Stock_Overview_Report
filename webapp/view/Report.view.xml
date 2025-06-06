@@ -90,14 +90,14 @@
                                         valueHelpRequest=".onOpenPlantDialog"
                                         placeholder="Select Plant"
                                         showClearIcon="true"
-                                        required="true"
+                                        required="false"
                                         liveChange=".onPlantClear"
                                     />
                                 </fb:control>
                             </fb:FilterGroupItem>
                             <fb:FilterGroupItem
                                 name="material"
-                                label="Material"
+                                label="Material Group"
                                 groupName="Group1"
                                 visibleInFilterBar="true"
                             >
@@ -106,9 +106,9 @@
                                         id="idMaterialInput"
                                         showValueHelp="true"
                                         valueHelpRequest=".onOpenMaterialDialog"
-                                        placeholder="Select Material"
+                                        placeholder="Select Material Group"
                                         showClearIcon="true"
-                                        required="true"
+                                        required="false"
                                         liveChange=".onMaterialClear"
                                     />
                                 </fb:control>
@@ -159,7 +159,9 @@
                         fixedLayout="true"
                         sticky="ColumnHeaders"
                         growing="true"
-                        growingScrollToLoad="true"
+                        growingScrollToLoad="false"
+                        growingThreshold="20"
+                        mode="None"
                     >
                         <columns>
                             <Column
@@ -180,7 +182,7 @@
                                 <Text text="Plant" />
                             </Column>
                             <Column
-                                width="8rem"
+                                width="6rem"
                                 minScreenWidth="Tablet"
                                 demandPopin="true"
                                 hAlign="Begin"
@@ -208,7 +210,7 @@
                                 visible="true"
                             >
                                 <Text
-                                    text="Received From Prodn Ord Qty-Unrestricted" 
+                                    text="Received From Prodn Ord Qty-Unrestricted"
                                 />
                             </Column>
                             <Column
@@ -219,7 +221,7 @@
                                 visible="true"
                             >
                                 <Text
-                                    text="Received From Prodn Ord Qty-Rejection" 
+                                    text="Received From Prodn Ord Qty-Rejection"
                                 />
                             </Column>
                             <Column
@@ -310,7 +312,10 @@
                                 hAlign="Begin"
                                 visible="true"
                             >
-                                <Text text="Total Received Qty" class="boldHeader"/>
+                                <Text
+                                    text="Total Received Qty"
+                                    class="boldHeader"
+                                />
                             </Column>
                             <Column
                                 width="10rem"
@@ -339,7 +344,9 @@
                                 press=".onPressRow"
                             >
                                 <cells>
-                                    <Text text="{TableDataModel>MaterialGroupCombined}" />
+                                    <Text
+                                        text="{TableDataModel>MaterialGroupCombined}"
+                                    />
                                     <Text text="{TableDataModel>Plant}" />
                                     <Text
                                         text="{TableDataModel>unit_of_measure}"

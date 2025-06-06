@@ -53,6 +53,8 @@ sap.ui.define([
 
             this.getPlantF4Data();
 
+            var oTable = this.byId("table");
+
         },
         getPlantF4Data: function () {
 
@@ -184,8 +186,6 @@ sap.ui.define([
             //this.oTable.setShowOverlay(false);
         },
         _validateInputFields: function () {
-
-            var inputFuncLoct = this.byId("idFunctionalLocationInput");
             var inputfromDate = this.byId("fromDate");
             var inputtoDate = this.byId("toDate");
 
@@ -207,13 +207,6 @@ sap.ui.define([
                 message += 'To Date , ';
             } else {
                 inputtoDate.setValueState(sap.ui.core.ValueState.None);
-            }
-            if (!inputFuncLoct.getValue()) {
-                inputFuncLoct.setValueState(sap.ui.core.ValueState.Error);
-                isValid = false;
-                message += 'Functional Location , ';
-            } else {
-                inputFuncLoct.setValueState(sap.ui.core.ValueState.None);
             }
 
             if (!isValid) {
@@ -250,12 +243,26 @@ sap.ui.define([
 
             var pUrl = "/ZI_STOCK_MOVEMENT_REP_BASE(p_date_low=datetime'" + oGlobalModelData.fromDate + "T00:00:00',p_date_high=datetime'" + oGlobalModelData.toDate + "T00:00:00')/Set";
 
+            var aPlantID = oGlobalModelData.selectedPlantId || [];
+            var aFilters = [];
+			if (aPlantID.length > 0) {
+				var aPlantFilters = aPlantID.map(function(plnt) {
+					return new sap.ui.model.Filter("Plant", sap.ui.model.FilterOperator.EQ, plnt)
+				});
+
+				aFilters.push(new sap.ui.model.Filter({
+					filters: aPlantFilters,
+					and: false
+				}));
+			}
+
             sap.ui.core.BusyIndicator.show();
             oNewModel.read(pUrl, {
-                // filters: aFilters,
+                filters: aFilters,
                 success: function (response) {
                     var oData = response.results;
                     console.log(oData);
+
                     if (!oData || oData.length == 0) {
                         sap.m.MessageBox.warning("No Data Available!");
                     }
@@ -279,6 +286,8 @@ sap.ui.define([
                 }
             });
         },
+        
+       
         onPressRow: function (oEvent) {
             // Extract the binding context of the pressed row
             var oSelectedItem = oEvent.getSource();
@@ -310,103 +319,103 @@ sap.ui.define([
         onClosePlantDialog: function () {
             this.byId("idPlantDialog").close();
         },
-        // onSelectFunctionalLocation: function () {
-        //     var oGlobalModel = this.getOwnerComponent().getModel("globalModel");
-        //     var oList = this.byId("idFunctionalLocationList");
-        //     var aSelectedItems = oList.getSelectedItems();
-        //     var aSelectedValues = [];
-        //     var aSelectedID = [];
+        onSelectPlant: function () {
+            var oGlobalModel = this.getOwnerComponent().getModel("globalModel");
+            var oList = this.byId("idPlantList");
+            var aSelectedItems = oList.getSelectedItems();
+            var aSelectedValues = [];
+            var aSelectedID = [];
 
-        //     // Extract selected Functional Locations
-        //     aSelectedItems.forEach(function (oItem) {
-        //         aSelectedValues.push(oItem.getTitle()); // FunctionalLocation Name
-        //         aSelectedID.push(oItem.getDescription()); // FunctionalLocation ID
-        //     });
+            // Extract selected Plant 
+            aSelectedItems.forEach(function (oItem) {
+                aSelectedValues.push(oItem.getTitle()); // Plant Id
+                aSelectedID.push(oItem.getDescription()); // Plant Name
+            });
 
 
-        //     // Show selected values in Input field
-        //     var sValue = aSelectedValues.join(", ");
-        //     this.byId("idFunctionalLocationInput").setValue(sValue);
+            // Show selected values in Input field
+            var sValue = aSelectedValues.join(", ");
+            this.byId("idPlantInput").setValue(sValue);
 
-        //     oGlobalModel.setProperty("/selectedFunctionalLocationsID", aSelectedID);   // Store Array Functional Location Id
+            // oGlobalModel.setProperty("/selectedPlantId", aSelectedID);   
 
-        //     /// Get Functional Location Input Value
-        //     var sFunctionalLocationValues = this.byId("idFunctionalLocationInput").getValue(); // Comma-separated values
+            
+            var sPlantValues = this.byId("idPlantInput").getValue(); // Comma-separated values
 
-        //     var aFunctionalLocationArray = sFunctionalLocationValues.split(", "); // Convert to array
-        //     // Store Functional Locations Name in Global Model
-        //     oGlobalModel.setProperty("/selectedFunctionalLocations", aFunctionalLocationArray);  // Store Array Functional Location Name
+            var aPlantArray = sPlantValues.split(", "); // Convert to array
+            
+            oGlobalModel.setProperty("/selectedPlantId", aPlantArray);  
 
-        //     var oSearchField = this.byId("idFunctionalLocationSearchField");  // Remove Search Field
-        //     oSearchField.setValue("");
-        //     var oBinding = oList.getBinding("items");
-        //     if (oBinding) {
-        //         oBinding.filter([]); // Remove filters
-        //     }
+            var oSearchField = this.byId("idPlantSearchField");  // Remove Search Field
+            oSearchField.setValue("");
+            var oBinding = oList.getBinding("items");
+            if (oBinding) {
+                oBinding.filter([]); // Remove filters
+            }
 
-        //     oList.removeSelections(true); // Removes all List selections
+            oList.removeSelections(true); // Removes all List selections
 
-        //     var oSelectAllCheckBox = this.byId("selectAllCheckBoxFunctionalLocation");
-        //     if (oSelectAllCheckBox) {
-        //         oSelectAllCheckBox.setSelected(false);
-        //     }
+            var oSelectAllCheckBox = this.byId("selectAllCheckBoxPlant");
+            if (oSelectAllCheckBox) {
+                oSelectAllCheckBox.setSelected(false);
+            }
 
-        //     // Close the dialog
-        //     this.byId("idFunctionalLocationDialog").close();
-        // },
+            // Close the dialog
+            this.byId("idPlantDialog").close();
+        },
 
-        // onFunctionalLocationClear: function (oEvent) {
-        //     var sValue = oEvent.getParameter("value"); // Get the input value
-        //     var oList = this.byId("idFunctionalLocationList"); // Get the list
-        //     var oGlobalModel = this.getOwnerComponent().getModel("globalModel");
+        onPlantClear: function (oEvent) {
+            var sValue = oEvent.getParameter("value"); // Get the input value
+            var oList = this.byId("idPlantList"); // Get the list
+            var oGlobalModel = this.getOwnerComponent().getModel("globalModel");
 
-        //     if (!sValue) {    // If input is empty, clear selection
-        //         oList.removeSelections(true); // Deselect all items
-        //         oGlobalModel.setProperty("/selectedFunctionalLocationsID", "");
-        //         oGlobalModel.setProperty("/selectedFunctionalLocations", "");
-        //     }
-        // },
-        // onSearchFunctionalLocation: function (oEvent) {
-        //     var sQuery = oEvent.getParameter("newValue"); // Get search input
-        //     var oList = this.byId("idFunctionalLocationList");
-        //     if (!oList) {
-        //         console.error("List not found!");
-        //         return;
-        //     }
+            if (!sValue) {    // If input is empty, clear selection
+                oList.removeSelections(true); // Deselect all items
+                oGlobalModel.setProperty("/selectedPlantId", "");
+                oGlobalModel.setProperty("/SelectedPlantName", "");
+            }
+        },
+        onSearchPlant: function (oEvent) {
+            var sQuery = oEvent.getParameter("newValue"); // Get search input
+            var oList = this.byId("idPlantList");
+            if (!oList) {
+                console.error("List not found!");
+                return;
+            }
 
-        //     var oBinding = oList.getBinding("items"); // Get binding of the List
-        //     if (!oBinding) {
-        //         console.error("List binding not found!");
-        //         return;
-        //     }
+            var oBinding = oList.getBinding("items"); // Get binding of the List
+            if (!oBinding) {
+                console.error("List binding not found!");
+                return;
+            }
 
-        //     var aFilters = [];
-        //     if (sQuery && sQuery.length > 0) {
-        //         var oFilter1 = new sap.ui.model.Filter("FunctionalLocationName", sap.ui.model.FilterOperator.Contains, sQuery);
-        //         var oFilter2 = new sap.ui.model.Filter("FunctionalLocation", sap.ui.model.FilterOperator.Contains, sQuery);
-        //         aFilters.push(new sap.ui.model.Filter({
-        //             filters: [oFilter1, oFilter2],
-        //             and: false // Match either FunctionalLocationName or FunctionalLocation
-        //         }));
-        //     }
+            var aFilters = [];
+            if (sQuery && sQuery.length > 0) {
+                var oFilter1 = new sap.ui.model.Filter("Plant", sap.ui.model.FilterOperator.Contains, sQuery);
+                var oFilter2 = new sap.ui.model.Filter("PlantName", sap.ui.model.FilterOperator.Contains, sQuery);
+                aFilters.push(new sap.ui.model.Filter({
+                    filters: [oFilter1, oFilter2],
+                    and: false 
+                }));
+            }
 
-        //     // Apply the filters to the list binding
-        //     oBinding.filter(aFilters);
-        // },
-        // onSelectAllChange: function (oEvent) {
-        //     var bSelected = oEvent.getParameter("selected"); // CheckBox state
-        //     var oList = this.byId("idFunctionalLocationList");
-        //     if (!oList) {
-        //         console.error("List not found!");
-        //         return;
-        //     }
+            // Apply the filters to the list binding
+            oBinding.filter(aFilters);
+        },
+        onSelectAllChangePlant: function (oEvent) {
+            var bSelected = oEvent.getParameter("selected"); // CheckBox state
+            var oList = this.byId("idPlantList");
+            if (!oList) {
+                console.error("List not found!");
+                return;
+            }
 
-        //     var aItems = oList.getItems(); // Get all list items
+            var aItems = oList.getItems(); // Get all list items
 
-        //     // Select or Deselect all list items based on CheckBox state
-        //     aItems.forEach(function (oItem) {
-        //         oItem.setSelected(bSelected);
-        //     });;
-        // }
+            // Select or Deselect all list items based on CheckBox state
+            aItems.forEach(function (oItem) {
+                oItem.setSelected(bSelected);
+            });;
+        }
     });
 });

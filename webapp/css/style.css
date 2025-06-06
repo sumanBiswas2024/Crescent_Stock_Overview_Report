@@ -20,7 +20,7 @@
     overflow-y: auto;
 }
 .tableWrapper {
-    height: 500px; /* vertical scroll area */
+    height: 450px; /* vertical scroll area */
     overflow-y: auto;
     overflow-x: auto;
   }
