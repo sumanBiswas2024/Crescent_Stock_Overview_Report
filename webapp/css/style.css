@@ -24,4 +24,17 @@
     overflow-y: auto;
     overflow-x: auto;
   }
+  .sapMLabel {
+    color: #101010;
+    font-size: .875rem;
+    font-family: "72", "72full", Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    display: inline-block;
+    white-space: nowrap;
+    cursor: text;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+
   

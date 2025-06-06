@@ -189,8 +189,6 @@ sap.ui.define([
             var inputfromDate = this.byId("fromDate");
             var inputtoDate = this.byId("toDate");
 
-            var inputFuncLoctValue = inputFuncLoct.getValue();
-
             var isValid = true;
             var message = '';
 
@@ -211,8 +209,8 @@ sap.ui.define([
 
             if (!isValid) {
                 // Remove the last comma and space from the message
-                // message = message.slice(0, -2);
-                // sap.m.MessageBox.error("Please fill up the following fields: " + message);
+                message = message.slice(0, -2);
+                sap.m.MessageBox.error("Please fill up the following fields: " + message);
                 return false;
             }
 
@@ -233,10 +231,10 @@ sap.ui.define([
             }
         },
         getDataFromBackend2: function () {
-            // if (!this._validateInputFields()) {
-            //     // Validation failed, return without fetching data
-            //     return;
-            // }
+            if (!this._validateInputFields()) {
+                // Validation failed, return without fetching data
+                return;
+            }
             var that = this;
             var oGlobalModelData = this.getOwnerComponent().getModel("globalModel").getData();
             var oNewModel = this.getOwnerComponent().getModel("ZSB_STOCK_OVERVIEW_REP");

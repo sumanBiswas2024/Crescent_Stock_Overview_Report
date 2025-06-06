@@ -23,13 +23,13 @@
                     />
                 </f:heading>
                 <f:expandedContent>
-                    <Label
+                    <Text
                         id="expandedLabel"
                         text="No filters active"
                     />
                 </f:expandedContent>
                 <f:snappedContent>
-                    <Label
+                    <Text
                         id="snappedLabel"
                         text="No filters active"
                     />
