@@ -1,0 +1,53 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="idMaterialGroupDialog"
+        title="Select Material Group"
+        draggable="true"
+        resizable="true"
+        afterClose=".onCloseMaterialGroupDialog"
+    >
+        <content>
+            <Toolbar>
+                <SearchField
+                    id="idMaterialGroupSearchField"
+                    placeholder="Search..."
+                    liveChange=".onSearchMaterialGroup"
+                />
+                <ToolbarSpacer />
+                <CheckBox
+                    id="selectAllCheckBoxMaterialGroup"
+                    text="Select All"
+                    select=".onSelectAllChangeMaterialGroup"
+                />
+            </Toolbar>
+            <List
+                id="idMaterialGroupList"
+                mode="MultiSelect"
+                items="{materialModel>/}"
+                selectionChange="onMaterialGroupSelectionChange"
+                growing="true"
+                growingThreshold="2000"
+            >
+                <StandardListItem
+                    title="{materialModel>ProductGroup}"
+                    description="{materialModel>ProductGroupText}"
+                    iconDensityAware="false"
+                    iconInset="false"
+                />
+            </List>
+        </content>
+        <buttons>
+            <Button
+                text="OK"
+                press="onSelectMaterialGroup"
+            />
+            <Button
+                text="Cancel"
+                press=".onCloseMaterialGroupDialog"
+            />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

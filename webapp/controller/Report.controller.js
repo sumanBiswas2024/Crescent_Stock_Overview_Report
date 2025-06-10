@@ -17,7 +17,7 @@ sap.ui.define([
     "sap/ui/core/Fragment"
 ], (Controller, JSONModel, Label, Filter, FilterOperator, PersonalizableInfo, MessageBox, exportLibrary, Spreadsheet, MessageToast, CustModels, PDFViewer, Dialog, BusyIndicator, VBox, Text, Fragment) => {
     "use strict";
-
+    const EdmType = exportLibrary.EdmType;
     return Controller.extend("com.crescent.app.stockoverviewreport.controller.Report", {
         onInit() {
 
@@ -52,6 +52,7 @@ sap.ui.define([
             this.oSmartVariantManagement.initialise(function () { }, this.oFilterBar);
 
             this.getPlantF4Data();
+            this.getMaterialF4Data();
 
             var oTable = this.byId("table");
 
@@ -81,10 +82,152 @@ sap.ui.define([
                 }
             });
         },
+        getMaterialF4Data: function () {
+
+            var that = this;
+            var oModel = this.getOwnerComponent().getModel("ZSB_STOCK_OVERVIEW_REP");
+            var pUrl = "/ZR_MATGRP_F4"
+            oModel.read(pUrl, {
+                success: function (response) {
+                    var oData = response.results;
+                    console.log(oData);
+
+                    var oMaterialModel = that.getOwnerComponent().getModel("materialModel");
+                    oMaterialModel.setData(oData);
+
+                    sap.ui.core.BusyIndicator.hide();
+                },
+                error: function (error) {
+                    sap.ui.core.BusyIndicator.hide();
+                    console.log(error);
+
+                    var errorObject = JSON.parse(error.responseText);
+                    sap.m.MessageBox.warning(errorObject.error.message.value);
+
+                }
+            });
+        },
         onDialogEquipmentNumber: function () {
             new CustModels();
         },
+        onExport: function () {
 
+            const oTable = this.oTable;
+            const oBinding = oTable.getBinding("items");
+            const aCols = this.createColumnConfig();
+            const oSettings = {
+                workbook: { columns: aCols },
+                dataSource: oBinding
+            };
+            const oSheet = new Spreadsheet(oSettings);
+
+            oSheet.build()
+                .then(function () {
+                    MessageToast.show("Spreadsheet export has finished");
+                }).finally(function () {
+                    oSheet.destroy();
+                });
+        },
+        createColumnConfig: function () {
+            return [
+                {
+                    label: "Material Group",
+                    property: "MaterialGroupCombined",
+                    type: EdmType.String
+                },
+                {
+                    label: "Plant",
+                    property: "Plant",
+                    type: EdmType.String
+                },
+                {
+                    label: "UOM",
+                    property: "unit_of_measure",
+                    type: EdmType.String
+                },
+                {
+                    label: "Opening Stock Qty",
+                    property: "open_stk_qty",
+                    type: EdmType.String
+                },
+                {
+                    label: "Received Against PO Qty",
+                    property: "rcvd_po_qty",
+                    type: EdmType.String
+                },
+                {
+                    label: "Received From Prodn Ord Qty-Unrestricted",
+                    property: "rcvd_mo_qty_unsl",
+                    type: EdmType.String
+                },
+                {
+                    label: "Received From Prodn Ord Qty-Rejection",
+                    property: "rcvd_mo_qty_resl",
+                    type: EdmType.String
+                },
+                {
+                    label: "Foundary Return Qty",
+                    property: "foundary_ret_qty",
+                    type: EdmType.String
+                },
+                {
+                    label: "Other Receipt Qty",
+                    property: "oth_rcv_qty",
+                    type: EdmType.String
+                },
+                {
+                    label: "Transfer In Qty",
+                    property: "trnsf_in_qty",
+                    type: EdmType.String
+                },
+                {
+                    label: "Sales Return Qty",
+                    property: "SLS_RET_QTY",
+                    type: EdmType.String
+                },
+                {
+                    label: "Delivery Against SO Qty",
+                    property: "SLS_DELV_QTY",
+                    type: EdmType.String
+                },
+                {
+                    label: "Issue to Prodn Order Qty",
+                    property: "iss_prd_qty",
+                    type: EdmType.String
+                },
+                {
+                    label: "Other Issue Qty",
+                    property: "oth_iss_QTY",
+                    type: EdmType.String
+                },
+                {
+                    label: "Return Against PO Qty",
+                    property: "RET_PO_QTY",
+                    type: EdmType.String
+                },
+                {
+                    label: "Transfer Out Qty",
+                    property: "trans_out_qty",
+                    type: EdmType.String
+                },
+                {
+                    label: "Total Received Qty",
+                    property: "totalrcvdqty",
+                    type: EdmType.String
+                },
+                {
+                    label: "Total Issue Qty",
+                    property: "totalissueqty",
+                    type: EdmType.String
+                },
+                {
+                    label: "Closing Stock",
+                    property: "closing_stk",
+                    type: EdmType.String
+                }
+
+            ];
+        },
         onExit: function () {
             this.oModel = null;
             this.oSmartVariantManagement = null;
@@ -242,17 +385,29 @@ sap.ui.define([
             var pUrl = "/ZI_STOCK_MOVEMENT_REP_BASE(p_date_low=datetime'" + oGlobalModelData.fromDate + "T00:00:00',p_date_high=datetime'" + oGlobalModelData.toDate + "T00:00:00')/Set";
 
             var aPlantID = oGlobalModelData.selectedPlantId || [];
-            var aFilters = [];
-			if (aPlantID.length > 0) {
-				var aPlantFilters = aPlantID.map(function(plnt) {
-					return new sap.ui.model.Filter("Plant", sap.ui.model.FilterOperator.EQ, plnt)
-				});
+            var aMaterialID = oGlobalModelData.selectedMaterialId || [];
 
-				aFilters.push(new sap.ui.model.Filter({
-					filters: aPlantFilters,
-					and: false
-				}));
-			}
+            var aFilters = [];
+            if (aPlantID.length > 0) {
+                var aPlantFilters = aPlantID.map(function (plnt) {
+                    return new sap.ui.model.Filter("Plant", sap.ui.model.FilterOperator.EQ, plnt)
+                });
+
+                aFilters.push(new sap.ui.model.Filter({
+                    filters: aPlantFilters,
+                    and: false
+                }));
+            }
+            if (aMaterialID.length > 0) {
+                var aMaterialFilters = aMaterialID.map(function (matrl) {
+                    return new sap.ui.model.Filter("MaterialGroup", sap.ui.model.FilterOperator.EQ, matrl)
+                });
+
+                aFilters.push(new sap.ui.model.Filter({
+                    filters: aMaterialFilters,
+                    and: false
+                }));
+            }
 
             sap.ui.core.BusyIndicator.show();
             oNewModel.read(pUrl, {
@@ -267,6 +422,20 @@ sap.ui.define([
                     // Format MaterialGroup field
                     oData.forEach(function (item) {
                         item.MaterialGroupCombined = item.MaterialGroup_Text + " (" + item.MaterialGroup + ")";
+                        // Format all quantity fields (string → float → locale string)
+                        [
+                            "open_stk_qty", "closing_stk", "rcvd_po_qty", "rcvd_mo_qty_resl",
+                            "rcvd_mo_qty_unsl", "trnsf_in_qty", "trans_out_qty", "oth_rcv_qty",
+                            "oth_iss_QTY", "iss_prd_qty", "foundary_ret_qty", "SLS_DELV_QTY",
+                            "SLS_RET_QTY", "RET_PO_QTY", "totalrcvdqty", "totalissueqty"
+                        ].forEach(function (field) {
+                            if (item[field]) {
+                                var num = parseFloat(item[field]);
+                                if (!isNaN(num)) {
+                                    item[field] = num.toLocaleString("en-US", { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+                                }
+                            }
+                        });
                     });
                     // Set Table Data
                     var oTableDataModel = that.getView().getModel("TableDataModel");
@@ -284,8 +453,6 @@ sap.ui.define([
                 }
             });
         },
-        
-       
         onPressRow: function (oEvent) {
             // Extract the binding context of the pressed row
             var oSelectedItem = oEvent.getSource();
@@ -299,6 +466,7 @@ sap.ui.define([
                 Plant: encodeURIComponent(sPlant)
             });
         },
+
         onOpenPlantDialog: function () {
             var oView = this.getView();
             if (!oView.byId("idPlantDialog")) {
@@ -317,6 +485,26 @@ sap.ui.define([
         onClosePlantDialog: function () {
             this.byId("idPlantDialog").close();
         },
+
+        onOpenMaterialDialog: function () {
+            var oView = this.getView();
+            if (!oView.byId("idMaterialGroupDialog")) {
+                sap.ui.core.Fragment.load({
+                    id: oView.getId(),
+                    name: "com.crescent.app.stockoverviewreport.Fragment.MaterialGroup",
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog)
+                    oDialog.open();
+                })
+            } else {
+                oView.byId("idMaterialGroupDialog").open();
+            }
+        },
+        onCloseMaterialGroupDialog: function () {
+            this.byId("idMaterialGroupDialog").close();
+        },
+
         onSelectPlant: function () {
             var oGlobalModel = this.getOwnerComponent().getModel("globalModel");
             var oList = this.byId("idPlantList");
@@ -337,12 +525,12 @@ sap.ui.define([
 
             // oGlobalModel.setProperty("/selectedPlantId", aSelectedID);   
 
-            
+
             var sPlantValues = this.byId("idPlantInput").getValue(); // Comma-separated values
 
             var aPlantArray = sPlantValues.split(", "); // Convert to array
-            
-            oGlobalModel.setProperty("/selectedPlantId", aPlantArray);  
+
+            oGlobalModel.setProperty("/selectedPlantId", aPlantArray);
 
             var oSearchField = this.byId("idPlantSearchField");  // Remove Search Field
             oSearchField.setValue("");
@@ -361,6 +549,46 @@ sap.ui.define([
             // Close the dialog
             this.byId("idPlantDialog").close();
         },
+        onSelectMaterialGroup: function () {
+            var oGlobalModel = this.getOwnerComponent().getModel("globalModel");
+            var oList = this.byId("idMaterialGroupList");
+            var aSelectedItems = oList.getSelectedItems();
+            var aSelectedValues = [];
+            var aSelectedID = [];
+
+            // Extract selected Material Group 
+            aSelectedItems.forEach(function (oItem) {
+                aSelectedValues.push(oItem.getTitle()); 
+                aSelectedID.push(oItem.getDescription());
+            });
+
+            // Show selected values in Input field
+            var sValue = aSelectedValues.join(", ");
+            this.byId("idMaterialInput").setValue(sValue);
+
+            // oGlobalModel.setProperty("/selectedMaterialId", aSelectedID);   
+
+            var sMaterialValues = this.byId("idMaterialInput").getValue(); // Comma-separated values
+            var aMaterialArray = sMaterialValues.split(", "); // Convert to array
+            oGlobalModel.setProperty("/selectedMaterialId", aMaterialArray);
+
+            var oSearchField = this.byId("idMaterialGroupSearchField");  // Remove Search Field
+            oSearchField.setValue("");
+            var oBinding = oList.getBinding("items");
+            if (oBinding) {
+                oBinding.filter([]); // Remove filters
+            }
+
+            oList.removeSelections(true); // Removes all List selections
+
+            var oSelectAllCheckBox = this.byId("selectAllCheckBoxMaterialGroup");
+            if (oSelectAllCheckBox) {
+                oSelectAllCheckBox.setSelected(false);
+            }
+
+            // Close the dialog
+            this.byId("idMaterialGroupDialog").close();
+        },
 
         onPlantClear: function (oEvent) {
             var sValue = oEvent.getParameter("value"); // Get the input value
@@ -373,6 +601,18 @@ sap.ui.define([
                 oGlobalModel.setProperty("/SelectedPlantName", "");
             }
         },
+        onMaterialClear: function (oEvent) {
+            var sValue = oEvent.getParameter("value"); // Get the input value
+            var oList = this.byId("idMaterialGroupList"); // Get the list
+            var oGlobalModel = this.getOwnerComponent().getModel("globalModel");
+
+            if (!sValue) {    // If input is empty, clear selection
+                oList.removeSelections(true); // Deselect all items
+                oGlobalModel.setProperty("/selectedMaterialId", "");
+                oGlobalModel.setProperty("/SelectedMaterialName", "");
+            }
+        },
+
         onSearchPlant: function (oEvent) {
             var sQuery = oEvent.getParameter("newValue"); // Get search input
             var oList = this.byId("idPlantList");
@@ -393,16 +633,59 @@ sap.ui.define([
                 var oFilter2 = new sap.ui.model.Filter("PlantName", sap.ui.model.FilterOperator.Contains, sQuery);
                 aFilters.push(new sap.ui.model.Filter({
                     filters: [oFilter1, oFilter2],
-                    and: false 
+                    and: false
                 }));
             }
 
             // Apply the filters to the list binding
             oBinding.filter(aFilters);
         },
+        onSearchMaterialGroup: function (oEvent) {
+            var sQuery = oEvent.getParameter("newValue"); // Get search input
+            var oList = this.byId("idMaterialGroupList");
+            if (!oList) {
+                console.error("List not found!");
+                return;
+            }
+
+            var oBinding = oList.getBinding("items"); // Get binding of the List
+            if (!oBinding) {
+                console.error("List binding not found!");
+                return;
+            }
+
+            var aFilters = [];
+            if (sQuery && sQuery.length > 0) {
+                var oFilter1 = new sap.ui.model.Filter("ProductGroup", sap.ui.model.FilterOperator.Contains, sQuery);
+                var oFilter2 = new sap.ui.model.Filter("ProductGroupText", sap.ui.model.FilterOperator.Contains, sQuery);
+                aFilters.push(new sap.ui.model.Filter({
+                    filters: [oFilter1, oFilter2],
+                    and: false
+                }));
+            }
+
+            // Apply the filters to the list binding
+            oBinding.filter(aFilters);
+        },
+
         onSelectAllChangePlant: function (oEvent) {
             var bSelected = oEvent.getParameter("selected"); // CheckBox state
             var oList = this.byId("idPlantList");
+            if (!oList) {
+                console.error("List not found!");
+                return;
+            }
+
+            var aItems = oList.getItems(); // Get all list items
+
+            // Select or Deselect all list items based on CheckBox state
+            aItems.forEach(function (oItem) {
+                oItem.setSelected(bSelected);
+            });;
+        },
+        onSelectAllChangeMaterialGroup: function (oEvent) {
+            var bSelected = oEvent.getParameter("selected"); // CheckBox state
+            var oList = this.byId("idMaterialGroupList");
             if (!oList) {
                 console.error("List not found!");
                 return;

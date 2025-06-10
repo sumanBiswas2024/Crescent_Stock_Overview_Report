@@ -110,6 +110,7 @@
                                         showClearIcon="true"
                                         required="false"
                                         liveChange=".onMaterialClear"
+                                        enabled="true"
                                     />
                                 </fb:control>
                             </fb:FilterGroupItem>
@@ -120,25 +121,17 @@
         </f:header>
         <f:content>
             <VBox>
-                <OverflowToolbar showSeparators="All">
+                <OverflowToolbar>
                     <content>
                         <Title
                             text="List of Stocks"
                             level="H2"
                         />
                         <ToolbarSpacer />
-
-                        <!-- <ToolbarSpacer /> -->
-                        <Button
-                            icon="sap-icon://sort"
-                            press=".onSortShipToParty"
-                            tooltip="Sort by Ship-to Party"
-                            visible="false"
-                        />
                         <Button
                             icon="sap-icon://excel-attachment"
                             press="onExport"
-                            visible="false"
+                            visible="true"
                         />
                     </content>
                 </OverflowToolbar>
